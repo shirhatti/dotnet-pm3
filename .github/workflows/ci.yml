@@ -1,0 +1,50 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1.0.0
+      with:
+        version: 3.1.100
+     
+    - name: dotnet build
+      run: dotnet build -c Release
+      
+    - name: dotnet test
+      run: dotnet test -c Release --no-build
+
+    - name: dotnet pack
+      run: dotnet pack -c Release --no-build --version-suffix prerelease-$(date +%Y%m%d%H%M%S)
+    
+    - name: setup nuget
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      uses: NuGet/setup-nuget@v1.0.2
+      with:
+        nuget-version: latest
+        
+    - name: add package repository
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: nuget source Add -Config nuget.config -Name github -Source https://nuget.pkg.github.com/shirhatti/index.json -UserName shirhatti -Password ${{ secrets.GITHUB_TOKEN }} -StorePasswordInClearText
+       
+    - name: push packages
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: |
+          for f in ./artifacts/*.nupkg
+          do
+            curl --silent --show-error --fail -vX PUT -u "shirhatti:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/shirhatti/
+            if [ $? -eq 0 ]
+            then
+              echo "successfully pushed $f"
+            else
+              echo "failed to push $f" >&2
+              exit 1
+            fi
+          done
