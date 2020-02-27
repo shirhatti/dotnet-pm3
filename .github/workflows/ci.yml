@@ -34,6 +34,10 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: nuget source add -Config NuGet.Config -Name github -Source https://nuget.pkg.github.com/shirhatti/index.json -UserName shirhatti -Password ${{ secrets.GITHUB_TOKEN }} -StorePasswordInClearText
        
-    - name: push packages
+    - name: push github packages 
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: nuget push artifacts/*.nupkg -Config NuGet.Config -Source github
+
+    - name: push feedz packages 
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: nuget push artifacts/*.nupkg -source https://f.feedz.io/shirhatti/pm3/nuget/index.json -ApiKey ${{ secrets.FEEDZ_TOKEN }}
