@@ -3,7 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <ToolCommandName>dotnet-pm3</ToolCommandName>
+    <ToolCommandName>pm3</ToolCommandName>
+    <PackageId>Shirhatti.pm3</PackageId>
     <RootNamespace>Shirhatti.Pm3</RootNamespace>
     <PackAsTool>true</PackAsTool>
     <IsPackable>true</IsPackable>
