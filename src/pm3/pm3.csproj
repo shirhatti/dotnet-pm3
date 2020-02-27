@@ -6,6 +6,7 @@
     <ToolCommandName>pm3</ToolCommandName>
     <PackageId>Shirhatti.pm3</PackageId>
     <RootNamespace>Shirhatti.Pm3</RootNamespace>
+    <RepositoryUrl>https://github.com/shirhatti/dotnet-pm3</RepositoryUrl>
     <PackAsTool>true</PackAsTool>
     <IsPackable>true</IsPackable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
